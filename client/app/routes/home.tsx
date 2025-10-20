@@ -1,3 +1,4 @@
+import Layout from "~/components/layout";
 import type { Route } from "./+types/home";
 
 export function meta({}: Route.MetaArgs) {
@@ -9,9 +10,9 @@ export function meta({}: Route.MetaArgs) {
 
 export default function Home() {
   return (
-    <body className="mt-8 py-16 mx-auto px-4 max-w-lg">
+    <Layout>
       <h1>Hello, World</h1>
       <p>Welcome to my first Remix app!</p>
-    </body>
+    </Layout>
   );
 }
