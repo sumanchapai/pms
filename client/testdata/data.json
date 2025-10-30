@@ -1,0 +1,162 @@
+{
+  "todo": [
+    {
+      "task": "yes, do something like that please.... and more. and less.",
+      "status": "IN_PROGRESS",
+      "id": "1"
+    },
+    {
+      "task": "More description optional...",
+      "status": "IN_PROGRESS",
+      "id": "2"
+    },
+    {
+      "task": "testing and updating some of the fields yes.",
+      "status": "COMPLETED",
+      "id": "3"
+    },
+    {
+      "task": "Yes, please. and one more and once more",
+      "status": "IN_PROGRESS",
+      "id": "4"
+    },
+    {
+      "task": "and something or more and things like that... and things like that.",
+      "status": "COMPLETED",
+      "id": "5"
+    },
+    {
+      "task": "Check Booking and update the codebase.",
+      "status": "IN_PROGRESS",
+      "id": "6"
+    },
+    {
+      "task": "Test some of the activities for loading...",
+      "status": "PENDING",
+      "id": "7"
+    },
+    {
+      "task": "Got it. Yes.",
+      "status": "COMPLETED",
+      "id": "8"
+    },
+    {
+      "task": "Testing currently.",
+      "status": "IN_PROGRESS",
+      "id": "9"
+    },
+    {
+      "task": "Review guest feedback and foobar zoobar.",
+      "status": "COMPLETED",
+      "id": "10"
+    }
+  ],
+  "bookingRatingSores": [
+    {
+      "id": "8b55",
+      "date": "2025-10",
+      "value": "5"
+    },
+    {
+      "id": "24f9",
+      "date": "2025-08",
+      "value": "9.5"
+    },
+    {
+      "id": "aec3",
+      "date": "2025-11",
+      "value": "1"
+    },
+    {
+      "id": "540f",
+      "date": "2025-11",
+      "value": "1"
+    },
+    {
+      "id": "b0e5",
+      "date": "2025-03",
+      "value": "5"
+    }
+  ],
+  "bookingRatingCount": [
+    {
+      "id": "454e",
+      "date": "2025-10",
+      "value": "5"
+    },
+    {
+      "id": "7c52",
+      "date": "2025-08",
+      "value": "100"
+    },
+    {
+      "id": "c361",
+      "date": "2025-11",
+      "value": "11"
+    },
+    {
+      "id": "7388",
+      "date": "2025-11",
+      "value": "11"
+    },
+    {
+      "id": "0abe",
+      "date": "2025-03",
+      "value": "100"
+    }
+  ],
+  "googleRatingSores": [
+    {
+      "id": "b2a3",
+      "date": "2025-10",
+      "value": "5"
+    },
+    {
+      "id": "b4e1",
+      "date": "2025-08",
+      "value": "4.5"
+    },
+    {
+      "id": "e9e0",
+      "date": "2025-11",
+      "value": "1"
+    },
+    {
+      "id": "4e77",
+      "date": "2025-11",
+      "value": "1"
+    },
+    {
+      "id": "92dc",
+      "date": "2025-03",
+      "value": "2"
+    }
+  ],
+  "googleRatingCount": [
+    {
+      "id": "4702",
+      "date": "2025-10",
+      "value": "5"
+    },
+    {
+      "id": "3ff4",
+      "date": "2025-08",
+      "value": "300"
+    },
+    {
+      "id": "5f8b",
+      "date": "2025-11",
+      "value": "1"
+    },
+    {
+      "id": "81be",
+      "date": "2025-11",
+      "value": "1"
+    },
+    {
+      "id": "042f",
+      "date": "2025-03",
+      "value": "100"
+    }
+  ]
+}

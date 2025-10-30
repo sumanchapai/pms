@@ -1,18 +1,32 @@
-import Layout from "~/components/layout";
-import type { Route } from "./+types/home";
-
-export function meta({}: Route.MetaArgs) {
-  return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
-  ];
-}
+import { Link } from "react-router";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "~/components/ui/card";
 
 export default function Home() {
   return (
-    <Layout>
-      <h1>Hello, World</h1>
-      <p>Welcome to my first Remix app!</p>
-    </Layout>
+    <div className="grid grid-cols-2 gap-x-8 gap-y-4 mt-16">
+      <Link to="/tasks">
+        {" "}
+        <Card>
+          <CardHeader>
+            <CardTitle>Tasks</CardTitle>
+            <CardDescription>Manage tasks.</CardDescription>
+          </CardHeader>
+        </Card>{" "}
+      </Link>
+      <Link to="/analytics">
+        {" "}
+        <Card>
+          <CardHeader>
+            <CardTitle>Analytics</CardTitle>
+            <CardDescription>Note montly analytics.</CardDescription>
+          </CardHeader>
+        </Card>{" "}
+      </Link>
+    </div>
   );
 }

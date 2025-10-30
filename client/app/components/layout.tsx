@@ -1,3 +1,9 @@
-export default function Layout({ children }: { children: React.ReactNode }) {
-  return <div className="mt-8 py-16 mx-auto px-4 max-w-lg">{children}</div>;
+import { Outlet } from "react-router";
+
+export default function Layout() {
+  return (
+    <div className="py-2 mx-auto px-4 max-w-2xl">
+      <Outlet />
+    </div>
+  );
 }
