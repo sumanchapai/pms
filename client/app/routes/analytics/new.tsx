@@ -1,23 +1,13 @@
 import { z } from "zod";
-import { Form, useActionData, useNavigate, redirect } from "react-router";
-import { Input } from "~/components/ui/input";
-import { Button } from "~/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogOverlay,
-  DialogTitle,
-} from "~/components/ui/dialog";
-import {
-  Field,
-  FieldDescription,
-  FieldError,
-  FieldLabel,
-} from "~/components/ui/field";
+import { redirect } from "react-router";
 import type { Route } from "./+types/analytics";
-import { useState } from "react";
-import { APIS, errorJSONResponse } from "~/lib/apis";
+import {
+  APIS,
+  errorJSONResponse,
+  POST_JSON_OPTIONS,
+  PUT_JSON_OPTIONS,
+} from "~/lib/apis";
+import { AnalyticsAddEdit } from "~/components/analytics/form";
 
 const analyticsSchema = z.object({
   month: z.string().nonempty(), // YYYY-MM
@@ -47,11 +37,16 @@ const analyticsSchema = z.object({
     }),
 });
 
-const POST_JSON_OPTIONS = {
-  method: "POST",
-};
+interface PostPutActionArgs extends Route.ActionArgs {
+  isPost: boolean;
+}
 
-export async function action({ request }: Route.ActionArgs) {
+// This action can be reused by both create analytics and update analytics pages.
+export async function AnalyticsPostPUTAction({
+  request,
+  params,
+  isPost,
+}: PostPutActionArgs) {
   const formData = await request.formData();
   const data = Object.fromEntries(formData.entries());
 
@@ -65,17 +60,25 @@ export async function action({ request }: Route.ActionArgs) {
   }
   // Save data
   let err;
-  await fetch(APIS.ANALYTICS, {
-    ...POST_JSON_OPTIONS,
-    body: JSON.stringify({
-      createdAt: new Date().toISOString(),
-      month: data.month,
-      bookingReviewsScore: data.bookingReviewsScores,
-      bookingReviewsCount: data.bookingReviewsCount,
-      googleReviewsScore: data.googleReviewsScores,
-      googleReviewsCount: data.googleReviewsCount,
-    }),
-  }).catch((e) => {
+  const basicDataBody = {
+    createdAt: new Date().toISOString(),
+    month: data.month,
+    bookingReviewsScore: data.bookingReviewsScores,
+    bookingReviewsCount: data.bookingReviewsCount,
+    googleReviewsScore: data.googleReviewsScores,
+    googleReviewsCount: data.googleReviewsCount,
+  };
+  const fetchData = isPost
+    ? {
+        ...POST_JSON_OPTIONS,
+        body: JSON.stringify(basicDataBody),
+      }
+    : {
+        ...PUT_JSON_OPTIONS,
+        body: JSON.stringify({ id: params.id, ...basicDataBody }),
+      };
+
+  await fetch(APIS.ANALYTICS, fetchData).catch((e) => {
     err = e;
   });
 
@@ -86,131 +89,13 @@ export async function action({ request }: Route.ActionArgs) {
   return redirect("..");
 }
 
-export default function NewAnalytics() {
-  const actionData = useActionData();
-  const fieldErrors = actionData?.errors?.properties;
-  const navigate = useNavigate();
-  const [dirty, setDirty] = useState(false);
-  const handleChange = () => setDirty(true);
+export async function action({ ...rest }: Route.ActionArgs) {
+  return AnalyticsPostPUTAction({
+    isPost: true,
+    ...rest,
+  });
+}
 
-  return (
-    <Dialog
-      defaultOpen
-      onOpenChange={(open) => {
-        if (!open) {
-          if (!dirty || confirm("Discard Changes?")) {
-            navigate("..");
-          }
-        }
-      }}
-    >
-      <DialogOverlay className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
-      <DialogContent
-        className="sm:max-w-lg bg-white"
-        onInteractOutside={(e) => e.preventDefault()} // 🔒 Prevent closing by clicking outside
-        onEscapeKeyDown={(e) => e.preventDefault()} // 🔒 Prevent closing by ESC
-      >
-        <DialogHeader>
-          <DialogTitle>Add Analytics</DialogTitle>
-        </DialogHeader>
-        <p className="text-red-800">{actionData?.errors?.message}</p>
-        <Form method="post" className="grid grid-cols-1 gap-y-4 mt-4">
-          <Field>
-            <FieldLabel htmlFor="month">Month</FieldLabel>
-            <Input
-              id="month"
-              name="month"
-              type="month"
-              required
-              onChange={handleChange}
-            />
-            <FieldError>{fieldErrors?.month?.errors?.[0]}</FieldError>
-          </Field>
-          <Field>
-            <FieldLabel htmlFor="bookingReviewsCount">
-              Number of Booking.com Reviews
-            </FieldLabel>
-            <Input
-              type="number"
-              required
-              onChange={handleChange}
-              id="bookingReviewsCount"
-              name="bookingReviewsCount"
-              step={1}
-              min={0}
-            />
-            {/* Input, Select, Switch, etc. */}
-            <FieldDescription></FieldDescription>
-            <FieldError>
-              {fieldErrors?.bookingReviewsCount?.errors?.[0]}
-            </FieldError>
-          </Field>
-          <Field>
-            <FieldLabel htmlFor="bookingReviewsScores">
-              Booking.com Review Score
-            </FieldLabel>
-            <Input
-              type="number"
-              step={0.1}
-              required
-              onChange={handleChange}
-              id="bookingReviewsScores"
-              name="bookingReviewsScores"
-              min={0}
-              max={10}
-            />
-            {/* Input, Select, Switch, etc. */}
-            <FieldDescription></FieldDescription>
-            <FieldError>
-              {fieldErrors?.bookingReviewsScores?.errors?.[0]}
-            </FieldError>
-          </Field>
-          <Field>
-            <FieldLabel htmlFor="googleReviewsCount">
-              Number of Google.com Reviews
-            </FieldLabel>
-            <Input
-              type="number"
-              required
-              onChange={handleChange}
-              id="googleReviewsCount"
-              name="googleReviewsCount"
-              step={1}
-              min={0}
-            />
-            {/* Input, Select, Switch, etc. */}
-            <FieldDescription></FieldDescription>
-            <FieldError className="">
-              {fieldErrors?.googleReviewsCount?.errors?.[0] ?? " "}
-            </FieldError>
-          </Field>
-          <Field>
-            <FieldLabel htmlFor="googleReviewsScores">
-              Google.com Review Score
-            </FieldLabel>
-            <Input
-              type="number"
-              step={0.1}
-              required
-              id="googleReviewsScores"
-              name="googleReviewsScores"
-              onChange={handleChange}
-              min={0}
-              max={5}
-            />
-            {/* Input, Select, Switch, etc. */}
-            <FieldDescription></FieldDescription>
-            <FieldError>
-              {fieldErrors?.googleReviewsScores?.errors?.[0] ?? ""}
-            </FieldError>
-          </Field>
-          <div className="flex mt-4 justify-between gap-x-4">
-            <Button className="cursor-pointer" type="submit">
-              Submit
-            </Button>
-          </div>
-        </Form>
-      </DialogContent>
-    </Dialog>
-  );
+export default function NewAnalytics() {
+  return <AnalyticsAddEdit />;
 }

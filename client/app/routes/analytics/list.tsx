@@ -66,7 +66,7 @@ export default function List({ loaderData }: Route.ComponentProps) {
                 {dataSorted.map((x) => (
                   <TableRow key={x.id}>
                     <TableCell>
-                      <Link to={``}>{x.month}</Link>
+                      <Link to={`../edit/${x.id}`}>{x.month}</Link>
                     </TableCell>
                     <TableCell className="">
                       {new Date(x.createdAt).toLocaleString()}

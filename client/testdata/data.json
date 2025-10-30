@@ -2,22 +2,13 @@
   "todo": [],
   "analytics": [
     {
-      "id": "9e23",
-      "createdAt": "2025-10-30T18:16:55.308Z",
-      "month": "2025-10",
-      "bookingReviewsScore": "10",
-      "bookingReviewsCount": "100",
-      "googleReviewsScore": "5",
-      "googleReviewsCount": "500"
-    },
-    {
-      "id": "0c61",
-      "createdAt": "2025-10-30T18:17:09.224Z",
-      "month": "2025-11",
-      "bookingReviewsScore": "9.5",
-      "bookingReviewsCount": "500",
+      "id": "8bd9",
+      "createdAt": "2025-10-30T18:26:47.943Z",
+      "month": "2025-12",
+      "bookingReviewsScore": "1.5",
+      "bookingReviewsCount": "200",
       "googleReviewsScore": "4.5",
-      "googleReviewsCount": "500"
+      "googleReviewsCount": "5"
     }
   ]
 }

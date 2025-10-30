@@ -11,6 +11,11 @@ export const POST_JSON_OPTIONS = {
   headers: { "Content-Type": "application/json" },
 };
 
+export const PUT_JSON_OPTIONS = {
+  method: "PUT",
+  headers: { "Content-Type": "application/json" },
+};
+
 export function errorJSONResponse(msg: string) {
   return new Response(
     JSON.stringify({
