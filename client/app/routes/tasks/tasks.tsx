@@ -3,13 +3,6 @@ import type { Route } from "./+types/tasks";
 import { Outlet } from "react-router";
 import { APIS } from "~/lib/apis";
 
-export function meta(_: Route.MetaArgs) {
-  return [
-    { title: "Home | TODO App" },
-    { name: "description", content: "Todo App" },
-  ];
-}
-
 export interface TODO {
   id: string;
   status: string;

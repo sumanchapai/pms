@@ -10,3 +10,19 @@ export const POST_JSON_OPTIONS = {
   method: "POST",
   headers: { "Content-Type": "application/json" },
 };
+
+export function errorJSONResponse(msg: string) {
+  return new Response(
+    JSON.stringify({
+      errors: {
+        message: msg,
+      },
+    }),
+    {
+      status: 400,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  );
+}

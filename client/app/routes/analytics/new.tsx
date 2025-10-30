@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { Link, Form, useActionData, useNavigate, redirect } from "react-router";
+import { Form, useActionData, useNavigate, redirect } from "react-router";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import {
@@ -17,7 +17,7 @@ import {
 } from "~/components/ui/field";
 import type { Route } from "./+types/analytics";
 import { useState } from "react";
-import { APIS } from "~/lib/apis";
+import { APIS, errorJSONResponse } from "~/lib/apis";
 
 const analyticsSchema = z.object({
   month: z.string().nonempty(), // YYYY-MM
@@ -63,13 +63,13 @@ export async function action({ request }: Route.ActionArgs) {
       headers: { "Content-Type": "application/json" },
     });
   }
-  // TODO:
   // Save data
   let err;
   await fetch(APIS.ANALYTICS, {
     ...POST_JSON_OPTIONS,
     body: JSON.stringify({
-      date: data.month,
+      createdAt: new Date().toISOString(),
+      month: data.month,
       bookingReviewsScore: data.bookingReviewsScores,
       bookingReviewsCount: data.bookingReviewsCount,
       googleReviewsScore: data.googleReviewsScores,
@@ -81,19 +81,7 @@ export async function action({ request }: Route.ActionArgs) {
 
   if (err) {
     console.error(err);
-    return new Response(
-      JSON.stringify({
-        errors: {
-          message: "Error while saving data. Check server console for error.",
-        },
-      }),
-      {
-        status: 400,
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
-    );
+    return errorJSONResponse("Failed to save.");
   }
   return redirect("..");
 }
@@ -140,7 +128,7 @@ export default function NewAnalytics() {
           </Field>
           <Field>
             <FieldLabel htmlFor="bookingReviewsCount">
-              Booking.com Reviews Count
+              Number of Booking.com Reviews
             </FieldLabel>
             <Input
               type="number"
@@ -179,7 +167,7 @@ export default function NewAnalytics() {
           </Field>
           <Field>
             <FieldLabel htmlFor="googleReviewsCount">
-              Google.com Reviews Count
+              Number of Google.com Reviews
             </FieldLabel>
             <Input
               type="number"

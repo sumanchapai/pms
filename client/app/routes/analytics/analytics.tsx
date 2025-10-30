@@ -21,22 +21,22 @@ import { Link, Outlet } from "react-router";
 export async function loader() {
   const analytics = (await fetch(APIS.ANALYTICS).then((x) =>
     x.json(),
-  )) as AnalyticsData;
+  )) as AnalyticsDataArray;
 
   const bookingRating = analytics.map((x) => {
-    return { date: x.date, value: x.bookingReviewsScore };
+    return { month: x.month, value: x.bookingReviewsScore };
   });
 
   const bookingRatingsCount = analytics.map((x) => {
-    return { date: x.date, value: x.bookingReviewsCount };
+    return { month: x.month, value: x.bookingReviewsCount };
   });
 
   const googleRatingsCount = analytics.map((x) => {
-    return { date: x.date, value: x.googleReviewsCount };
+    return { month: x.month, value: x.googleReviewsCount };
   });
 
   const googleRating = analytics.map((x) => {
-    return { date: x.date, value: x.googleReviewsScore };
+    return { month: x.month, value: x.googleReviewsScore };
   });
 
   return {
@@ -93,18 +93,21 @@ export default function Analytics({ loaderData }: Route.ComponentProps) {
 }
 
 export type ChartData = Array<{
-  date: string; // e.g. "2025-11-01"
+  month: string; // e.g. "2025-11-01"
   value: number;
 }>;
 
-export type AnalyticsData = Array<{
+export type AnalyticsDataArray = Array<AnalyticsData>;
+
+export interface AnalyticsData {
   id: string;
-  date: string; // e.g. "2025-11-01" or "2025-11"
+  month: string; // e.g. "2025-11"
   bookingReviewsScore: number;
   bookingReviewsCount: number;
   googleReviewsScore: number;
   googleReviewsCount: number;
-}>;
+  createdAt: string; // eg. timestamp
+}
 
 function formatDate(dateStr: string) {
   const date = new Date(dateStr);
@@ -126,7 +129,7 @@ function LinearChart({
 }) {
   const sortedData = useMemo(() => {
     return [...data].sort(
-      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
+      (a, b) => new Date(a.month).getTime() - new Date(b.month).getTime(),
     );
   }, [data]);
 
@@ -156,7 +159,7 @@ function LinearChart({
               <CartesianGrid vertical={false} />
               <YAxis dataKey={"value"} axisLine={false} domain={domain} />
               <XAxis
-                dataKey="date"
+                dataKey="month"
                 tickLine={false}
                 axisLine={false}
                 tickMargin={8}

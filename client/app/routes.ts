@@ -14,6 +14,8 @@ export default [
       ]),
       route("analytics", "routes/analytics/analytics.tsx", [
         route("new", "routes/analytics/new.tsx"),
+        route("list", "routes/analytics/list.tsx"),
+        route("delete/:id", "routes/analytics/delete.tsx"),
       ]),
     ]),
   ]),
