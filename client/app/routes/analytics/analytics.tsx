@@ -19,26 +19,25 @@ import { Button } from "~/components/ui/button";
 import { Link, Outlet } from "react-router";
 
 export async function loader() {
-  const bookingRatingPromise = fetch(APIS.BOOKING_RATING_SCORES).then((x) =>
+  const analytics = (await fetch(APIS.ANALYTICS).then((x) =>
     x.json(),
-  ) as Promise<ChartData>;
-  const bookingRatingsCountPromise = fetch(APIS.BOOKING_RATING_COUNT).then(
-    (x) => x.json(),
-  ) as Promise<ChartData>;
-  const googleRatingPromise = fetch(APIS.GOOGLE_RATING_SCORES).then((x) =>
-    x.json(),
-  ) as Promise<ChartData>;
-  const googleRatingsCountPromise = fetch(APIS.GOOGLE_RATING_COUNT).then((x) =>
-    x.json(),
-  ) as Promise<ChartData>;
+  )) as AnalyticsData;
 
-  const [bookingRating, bookingRatingsCount, googleRating, googleRatingsCount] =
-    await Promise.all([
-      bookingRatingPromise,
-      bookingRatingsCountPromise,
-      googleRatingPromise,
-      googleRatingsCountPromise,
-    ]);
+  const bookingRating = analytics.map((x) => {
+    return { date: x.date, value: x.bookingReviewsScore };
+  });
+
+  const bookingRatingsCount = analytics.map((x) => {
+    return { date: x.date, value: x.bookingReviewsCount };
+  });
+
+  const googleRatingsCount = analytics.map((x) => {
+    return { date: x.date, value: x.googleReviewsCount };
+  });
+
+  const googleRating = analytics.map((x) => {
+    return { date: x.date, value: x.googleReviewsScore };
+  });
 
   return {
     bookingRating,
@@ -96,6 +95,15 @@ export default function Analytics({ loaderData }: Route.ComponentProps) {
 export type ChartData = Array<{
   date: string; // e.g. "2025-11-01"
   value: number;
+}>;
+
+export type AnalyticsData = Array<{
+  id: string;
+  date: string; // e.g. "2025-11-01" or "2025-11"
+  bookingReviewsScore: number;
+  bookingReviewsCount: number;
+  googleReviewsScore: number;
+  googleReviewsCount: number;
 }>;
 
 function formatDate(dateStr: string) {

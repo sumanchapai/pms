@@ -65,41 +65,17 @@ export async function action({ request }: Route.ActionArgs) {
   }
   // TODO:
   // Save data
-  const BookingReviewScore = fetch(APIS.BOOKING_RATING_SCORES, {
-    ...POST_JSON_OPTIONS,
-    body: JSON.stringify({
-      date: data.month,
-      value: data.bookingReviewsScores,
-    }),
-  });
-  const BookingReviewCount = fetch(APIS.BOOKING_RATING_COUNT, {
-    ...POST_JSON_OPTIONS,
-    body: JSON.stringify({
-      date: data.month,
-      value: data.bookingReviewsCount,
-    }),
-  });
-  const GoogleReviewScore = fetch(APIS.GOOGLE_RATING_SCORES, {
-    ...POST_JSON_OPTIONS,
-    body: JSON.stringify({
-      date: data.month,
-      value: data.googleReviewsScores,
-    }),
-  });
-  const GoogleReviewCount = fetch(APIS.GOOGLE_RATING_COUNT, {
-    ...POST_JSON_OPTIONS,
-    body: JSON.stringify({
-      date: data.month,
-      value: data.googleReviewsCount,
-    }),
-  });
   let err;
-  await Promise.all([
-    BookingReviewCount,
-    BookingReviewScore,
-    GoogleReviewCount,
-    GoogleReviewScore,
-  ]).catch((e) => {
+  await fetch(APIS.ANALYTICS, {
+    ...POST_JSON_OPTIONS,
+    body: JSON.stringify({
+      date: data.month,
+      bookingReviewsScore: data.bookingReviewsScores,
+      bookingReviewsCount: data.bookingReviewsCount,
+      googleReviewsScore: data.googleReviewsScores,
+      googleReviewsCount: data.googleReviewsCount,
+    }),
+  }).catch((e) => {
     err = e;
   });
 
@@ -108,7 +84,7 @@ export async function action({ request }: Route.ActionArgs) {
     return new Response(
       JSON.stringify({
         errors: {
-          message: "Failed to save some data. Check server console for error.",
+          message: "Error while saving data. Check server console for error.",
         },
       }),
       {
@@ -241,11 +217,6 @@ export default function NewAnalytics() {
             </FieldError>
           </Field>
           <div className="flex mt-4 justify-between gap-x-4">
-            <Link to="..">
-              <Button variant="outline" className="cursor-pointer">
-                Discard
-              </Button>
-            </Link>
             <Button className="cursor-pointer" type="submit">
               Submit
             </Button>
