@@ -24,6 +24,7 @@ export default function AnalyticsEdit({ loaderData }: Route.ComponentProps) {
     <AnalyticsAddEdit
       method="post"
       action={"."}
+      edit={true}
       initialDate={loaderData.data.date}
       initialBookingReviewsScore={loaderData.data.bookingReviewsScores}
       initialBookingCityRanking={loaderData.data.bookingCityRanking}

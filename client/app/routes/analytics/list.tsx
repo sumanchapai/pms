@@ -49,7 +49,7 @@ export default function List({ loaderData }: Route.ComponentProps) {
       }}
     >
       <DialogOverlay className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
-      <DialogContent className="sm:max-w-lg bg-white motion-safe:animate-in motion-safe:fade-in-0 motion-safe:zoom-in-95">
+      <DialogContent className="sm:max-w-lg bg-white motion-safe:animate-in motion-safe:fade-in-0 motion-safe:zoom-in-95 overflow-auto max-h-[80%]">
         <DialogHeader>
           {dataSorted.length === 0 ? (
             <NoAnalytics />

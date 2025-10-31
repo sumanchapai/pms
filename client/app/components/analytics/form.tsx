@@ -26,6 +26,7 @@ interface AnalyticsAddEditProps {
   action: string;
   method: HTMLFormMethod;
   initialDate?: string;
+  edit?: boolean;
   initialBookingCityRanking?: number;
   initialBookingReviewsCount?: number;
   initialBookingReviewsScore?: number;
@@ -38,6 +39,7 @@ interface AnalyticsAddEditProps {
 }
 export function AnalyticsAddEdit({
   method,
+  edit,
   action,
   ...props
 }: AnalyticsAddEditProps) {
@@ -65,7 +67,7 @@ export function AnalyticsAddEdit({
         onEscapeKeyDown={(e) => e.preventDefault()} // 🔒 Prevent closing by ESC
       >
         <DialogHeader>
-          <DialogTitle>Add Analytics</DialogTitle>
+          <DialogTitle>{edit ? "Edit Analytics" : "Add Analytics"}</DialogTitle>
         </DialogHeader>
         <p className="text-red-800">{actionData?.errors?.message}</p>
         <Form

@@ -90,57 +90,111 @@ export default function Analytics({ loaderData }: Route.ComponentProps) {
       <div className="mt-16 grid grid-cols-1 gap-x-4 lg:grid-cols-2 gap-y-16">
         <LinearChart
           title="Booking.Com Rating"
-          domain={[0, 10]}
           description=""
+          color="blue"
           data={loaderData.bookingRating}
+          domain={[
+            Math.max(
+              Math.min(...loaderData.bookingRating.map((x) => x.value)) - 1,
+              0,
+            ),
+            10,
+          ]}
         />
         <LinearChart
           title="Booking.Com Ranking within the city"
           yAxisReversed={true}
+          color="blue"
           description=""
           data={loaderData.bookingCityRanking}
+          domain={[
+            Math.min(...loaderData.bookingCityRanking.map((x) => x.value)) - 10,
+            Math.max(...loaderData.bookingCityRanking.map((x) => x.value)) + 10,
+          ]}
         />
         <LinearChart
           title="Booking.com reviews #"
           description=""
           data={loaderData.bookingRatingsCount}
           color="blue"
+          domain={[
+            Math.min(...loaderData.bookingRatingsCount.map((x) => x.value)) -
+              10,
+            Math.max(...loaderData.bookingRatingsCount.map((x) => x.value)) +
+              10,
+          ]}
         />
         <LinearChart
           title="Google Rating"
+          color="red"
           description=""
-          domain={[0, 5]}
           data={loaderData.googleRating}
+          domain={[
+            Math.max(
+              Math.min(...loaderData.googleRating.map((x) => x.value)) - 1,
+              0,
+            ),
+            5,
+          ]}
         />
         <LinearChart
           title="Google reviews #"
           description=""
+          color="red"
           data={loaderData.googleRatingsCount}
-          color="blue"
+          domain={[
+            Math.min(...loaderData.googleRatingsCount.map((x) => x.value)) - 10,
+            Math.max(...loaderData.googleRatingsCount.map((x) => x.value)) + 10,
+          ]}
         />
         <LinearChart
           title="TripAdvisor Rating"
+          color="purple"
           description=""
-          domain={[0, 5]}
           data={loaderData.tripAdvisorRating}
+          domain={[
+            Math.max(
+              Math.min(...loaderData.tripAdvisorRating.map((x) => x.value)) - 1,
+              0,
+            ),
+            5,
+          ]}
         />
         <LinearChart
           title="TripAdvisor reviews #"
           description=""
+          color="purple"
           data={loaderData.tripAdvisorRatingsCount}
-          color="blue"
+          domain={[
+            Math.min(
+              ...loaderData.tripAdvisorRatingsCount.map((x) => x.value),
+            ) - 10,
+            Math.max(
+              ...loaderData.tripAdvisorRatingsCount.map((x) => x.value),
+            ) + 10,
+          ]}
         />
         <LinearChart
           title="Airbnb Rating"
           description=""
-          domain={[0, 5]}
           data={loaderData.airbnbRating}
+          domain={[
+            Math.max(
+              Math.min(...loaderData.airbnbRating.map((x) => x.value)) - 1,
+              0,
+            ),
+            5,
+          ]}
         />
         <LinearChart
           title="Airbnb reviews #"
           description=""
           data={loaderData.airbnbRatingsCount}
           color="blue"
+          domain={[
+            Math.min(...loaderData.airbnbRatingsCount.map((x) => x.value)) - 10,
+            Math.max(...loaderData.airbnbRatingsCount.map((x) => x.value)) + 10,
+          ]}
         />
       </div>
       <Outlet />
@@ -162,6 +216,11 @@ export type AnalyticsData = Omit<AnalyticsDataBaics, "date"> & {
 };
 
 function formatDate(dateStr: string) {
+  const date = new Date(dateStr);
+  return `${date.getFullYear()}-${date.toLocaleString("en-US", { month: "short" })}`;
+}
+
+function formatDateWithDate(dateStr: string) {
   const date = new Date(dateStr);
   return `${date.getFullYear()}-${date.toLocaleString("en-US", { month: "short" })}-${date.getDate()}`;
 }
@@ -226,7 +285,9 @@ function LinearChart({
               />
               <ChartTooltip
                 cursor={false}
-                content={<ChartTooltipContent labelFormatter={formatDate} />}
+                content={
+                  <ChartTooltipContent labelFormatter={formatDateWithDate} />
+                }
               />
               <Line
                 dataKey="value"
