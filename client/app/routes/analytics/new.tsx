@@ -10,7 +10,7 @@ import {
 import { AnalyticsAddEdit } from "~/components/analytics/form";
 
 const analyticsSchema = z.object({
-  month: z.string().nonempty(), // YYYY-MM
+  date: z.coerce.date(), // YYYY-MM-DD
   bookingReviewsCount: z
     .string()
     .transform(Number)
@@ -41,52 +41,86 @@ interface PostPutActionArgs extends Route.ActionArgs {
   isPost: boolean;
 }
 
-// This action can be reused by both create analytics and update analytics pages.
 export async function AnalyticsPostPUTAction({
   request,
   params,
   isPost,
 }: PostPutActionArgs) {
-  const formData = await request.formData();
-  const data = Object.fromEntries(formData.entries());
+  try {
+    console.log("1");
+    // 1️⃣ Parse form data
+    const formData = await request.formData();
+    const data = Object.fromEntries(formData.entries());
 
-  const result = analyticsSchema.safeParse(data); // throws if invalid
-  if (result.error) {
-    const errors = z.treeifyError(result.error);
-    return new Response(JSON.stringify({ errors }), {
-      status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
-  }
-  // Save data
-  let err;
-  const basicDataBody = {
-    createdAt: new Date().toISOString(),
-    month: data.month,
-    bookingReviewsScore: data.bookingReviewsScores,
-    bookingReviewsCount: data.bookingReviewsCount,
-    googleReviewsScore: data.googleReviewsScores,
-    googleReviewsCount: data.googleReviewsCount,
-  };
-  const fetchData = isPost
-    ? {
-        ...POST_JSON_OPTIONS,
-        body: JSON.stringify(basicDataBody),
+    // 2️⃣ Validate using Zod
+    const result = analyticsSchema.safeParse(data);
+    if (!result.success) {
+      const errors = z.treeifyError(result.error);
+      return new Response(JSON.stringify({ errors }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
+    }
+
+    console.log("2");
+    // 3️⃣ Prepare body
+    const body = {
+      createdAt: new Date().toISOString(),
+      date: data.date,
+      bookingReviewsScore: data.bookingReviewsScores,
+      bookingReviewsCount: data.bookingReviewsCount,
+      googleReviewsScore: data.googleReviewsScores,
+      googleReviewsCount: data.googleReviewsCount,
+    };
+
+    // 4️⃣ Choose request options
+    const fetchOptions = isPost
+      ? { ...POST_JSON_OPTIONS, body: JSON.stringify(body) }
+      : {
+          ...PUT_JSON_OPTIONS,
+          body: JSON.stringify(body),
+        };
+
+    console.log("3");
+    // 5️⃣ Make the request
+    const res = await fetch(
+      isPost ? APIS.ANALYTICS : `${APIS.ANALYTICS}/${params.id}`,
+      fetchOptions,
+    );
+    console.log("4");
+
+    // 6️⃣ Handle HTTP errors
+    if (!res.ok) {
+      console.error(APIS.ANALYTICS, fetchOptions);
+      // Try to extract error details from the response
+      let errorText = "";
+      try {
+        const contentType = res.headers.get("content-type");
+        if (contentType && contentType.includes("application/json")) {
+          const data = await res.json();
+          errorText = data?.message || JSON.stringify(data);
+        } else {
+          errorText = await res.text();
+        }
+      } catch (_) {
+        errorText = "Unknown server error";
       }
-    : {
-        ...PUT_JSON_OPTIONS,
-        body: JSON.stringify({ id: params.id, ...basicDataBody }),
-      };
+      console.error("Server responded with error:", res.status, errorText);
+      return errorJSONResponse(
+        `Failed to delete (status ${res.status}): ${errorText || "Unknown error"}`,
+      );
+    }
 
-  await fetch(APIS.ANALYTICS, fetchData).catch((e) => {
-    err = e;
-  });
-
-  if (err) {
-    console.error(err);
-    return errorJSONResponse("Failed to save.");
+    // 7️⃣ Redirect on success
+    return redirect("..");
+  } catch (err: unknown) {
+    // 8️⃣ Handle unexpected errors
+    console.error("AnalyticsPostPUTAction error:", err);
+    return new Response(
+      JSON.stringify({ errors: { message: "Unexpected server error." } }),
+      { status: 500, headers: { "Content-Type": "application/json" } },
+    );
   }
-  return redirect("..");
 }
 
 export async function action({ ...rest }: Route.ActionArgs) {
@@ -97,5 +131,5 @@ export async function action({ ...rest }: Route.ActionArgs) {
 }
 
 export default function NewAnalytics() {
-  return <AnalyticsAddEdit />;
+  return <AnalyticsAddEdit method="post" action="." />;
 }

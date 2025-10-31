@@ -24,19 +24,19 @@ export async function loader() {
   )) as AnalyticsDataArray;
 
   const bookingRating = analytics.map((x) => {
-    return { month: x.month, value: x.bookingReviewsScore };
+    return { date: x.date, value: x.bookingReviewsScore };
   });
 
   const bookingRatingsCount = analytics.map((x) => {
-    return { month: x.month, value: x.bookingReviewsCount };
+    return { date: x.date, value: x.bookingReviewsCount };
   });
 
   const googleRatingsCount = analytics.map((x) => {
-    return { month: x.month, value: x.googleReviewsCount };
+    return { date: x.date, value: x.googleReviewsCount };
   });
 
   const googleRating = analytics.map((x) => {
-    return { month: x.month, value: x.googleReviewsScore };
+    return { date: x.date, value: x.googleReviewsScore };
   });
 
   return {
@@ -93,7 +93,7 @@ export default function Analytics({ loaderData }: Route.ComponentProps) {
 }
 
 export type ChartData = Array<{
-  month: string; // e.g. "2025-11-01"
+  date: string; // e.g. "2025-11-01"
   value: number;
 }>;
 
@@ -101,7 +101,7 @@ export type AnalyticsDataArray = Array<AnalyticsData>;
 
 export interface AnalyticsData {
   id: string;
-  month: string; // e.g. "2025-11"
+  date: string; // e.g. "2025-11"
   bookingReviewsScore: number;
   bookingReviewsCount: number;
   googleReviewsScore: number;
@@ -111,7 +111,7 @@ export interface AnalyticsData {
 
 function formatDate(dateStr: string) {
   const date = new Date(dateStr);
-  return `${date.getFullYear()}-${date.toLocaleString("en-US", { month: "short" })}`;
+  return `${date.getFullYear()}-${date.toLocaleString("en-US", { month: "short" })}-${date.getDate()}`;
 }
 
 function LinearChart({
@@ -129,7 +129,7 @@ function LinearChart({
 }) {
   const sortedData = useMemo(() => {
     return [...data].sort(
-      (a, b) => new Date(a.month).getTime() - new Date(b.month).getTime(),
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
     );
   }, [data]);
 
@@ -159,7 +159,7 @@ function LinearChart({
               <CartesianGrid vertical={false} />
               <YAxis dataKey={"value"} axisLine={false} domain={domain} />
               <XAxis
-                dataKey="month"
+                dataKey="date"
                 tickLine={false}
                 axisLine={false}
                 tickMargin={8}

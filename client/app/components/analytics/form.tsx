@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { Form, useActionData, useNavigate } from "react-router";
+import {
+  Form,
+  useActionData,
+  useNavigate,
+  type HTMLFormMethod,
+} from "react-router";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 
@@ -18,13 +23,19 @@ import {
 } from "~/components/ui/dialog";
 
 interface AnalyticsAddEditProps {
-  initialMonth?: string;
+  action: string;
+  method: HTMLFormMethod;
+  initialDate?: string;
   initialBookingReviewsCount?: number;
   initialBookingReviewsScore?: number;
   initialGoogleReviewsCount?: number;
   initialGoogleReviewsScore?: number;
 }
-export function AnalyticsAddEdit({ ...props }: AnalyticsAddEditProps) {
+export function AnalyticsAddEdit({
+  method,
+  action,
+  ...props
+}: AnalyticsAddEditProps) {
   const actionData = useActionData();
   const fieldErrors = actionData?.errors?.properties;
   const navigate = useNavigate();
@@ -52,18 +63,22 @@ export function AnalyticsAddEdit({ ...props }: AnalyticsAddEditProps) {
           <DialogTitle>Add Analytics</DialogTitle>
         </DialogHeader>
         <p className="text-red-800">{actionData?.errors?.message}</p>
-        <Form method="post" className="grid grid-cols-1 gap-y-4 mt-4">
+        <Form
+          method={method}
+          action={action}
+          className="grid grid-cols-1 gap-y-4 mt-4"
+        >
           <Field>
-            <FieldLabel htmlFor="month">Month</FieldLabel>
+            <FieldLabel htmlFor="date">Date</FieldLabel>
             <Input
-              defaultValue={props.initialMonth}
-              id="month"
-              name="month"
-              type="month"
+              defaultValue={props.initialDate}
+              id="date"
+              name="date"
+              type="date"
               required
               onChange={handleChange}
             />
-            <FieldError>{fieldErrors?.month?.errors?.[0]}</FieldError>
+            <FieldError>{fieldErrors?.date?.errors?.[0]}</FieldError>
           </Field>
           <Field>
             <FieldLabel htmlFor="bookingReviewsCount">

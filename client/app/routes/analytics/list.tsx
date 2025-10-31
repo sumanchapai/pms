@@ -35,7 +35,7 @@ export async function loader() {
 export default function List({ loaderData }: Route.ComponentProps) {
   const dataSorted = useMemo(() => {
     return loaderData.sort(
-      (a, b) => new Date(a.month).getTime() - new Date(b.month).getTime(),
+      (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime(),
     );
   }, [loaderData]);
   const navigate = useNavigate();
@@ -49,7 +49,7 @@ export default function List({ loaderData }: Route.ComponentProps) {
       }}
     >
       <DialogOverlay className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
-      <DialogContent className="sm:max-w-lg bg-white">
+      <DialogContent className="sm:max-w-lg bg-white motion-safe:animate-in motion-safe:fade-in-0 motion-safe:zoom-in-95">
         <DialogHeader>
           {dataSorted.length === 0 ? (
             <NoAnalytics />
@@ -57,16 +57,24 @@ export default function List({ loaderData }: Route.ComponentProps) {
             <Table className="mt-8">
               <TableHeader>
                 <TableRow>
-                  <TableHead>Month</TableHead>
+                  <TableHead>Date</TableHead>
                   <TableHead>Created</TableHead>
                   <TableHead>Delete</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {dataSorted.map((x) => (
-                  <TableRow key={x.id}>
+                  <TableRow
+                    key={x.id}
+                    className="hover:bg-blue-50 transition-colors"
+                  >
                     <TableCell>
-                      <Link to={`../edit/${x.id}`}>{x.month}</Link>
+                      <Link
+                        to={`../edit/${x.id}`}
+                        className="text-blue-600 hover:text-blue-800 hover:underline cursor-pointer transition-colors"
+                      >
+                        {x.date}
+                      </Link>
                     </TableCell>
                     <TableCell className="">
                       {new Date(x.createdAt).toLocaleString()}
