@@ -60,7 +60,10 @@ export async function loader() {
     return { date: x.date, value: x.tripAdvisorReviewsScores };
   });
 
+  const title = "Analytics";
+
   return {
+    title,
     bookingRating,
     bookingRatingsCount,
     bookingCityRanking,
