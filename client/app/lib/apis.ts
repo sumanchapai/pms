@@ -1,5 +1,6 @@
 // TODO: Update this to use environment variable.
-const API_BASE = "http://localhost:4000";
+const API_BASE = import.meta.env.VITE_BACKEND_URL;
+console.log("here with API_BASE", API_BASE);
 
 export const APIS = {
   TODOS: `${API_BASE}/todo`,

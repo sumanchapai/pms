@@ -7,8 +7,5 @@ WORKDIR /app
 # Install json-server globally
 RUN npm install -g json-server
 
-# Expose default port
-EXPOSE 3000
-
 # Start json-server
-CMD ["json-server", "--watch", "/app/db.json", "--host", "0.0.0.0"]
+CMD ["json-server", "--watch", "/app/db.json", "--host", "0.0.0.0", "--port", "4001"]

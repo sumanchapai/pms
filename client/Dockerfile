@@ -12,7 +12,12 @@ FROM node:20-alpine AS build-env
 COPY . /app/
 COPY --from=development-dependencies-env /app/node_modules /app/node_modules
 WORKDIR /app
-RUN npm run build
+
+# Build the app with build-time environment variables
+ARG VITE_TITLE
+ARG VITE_DATA_SERVER_URL
+ARG VITE_BACKEND_URL
+RUN VITE_TITLE=$VITE_TITLE VITE_DATA_SERVER_URL=$VITE_DATA_SERVER_URL VITE_BACKEND_URL=$VITE_BACKEND_URL npm run build
 
 FROM node:20-alpine
 COPY ./package.json package-lock.json /app/

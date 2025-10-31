@@ -2,10 +2,8 @@ services:
   backend:
     build:
       context: ./server
-    environment:
-      - DB_FILE=${}
     volumes:
-      - ${DB_FILE}:/app/db.json
+      - ${DB_REPO}:/app/
     networks:
       - sharednet
 
@@ -13,11 +11,12 @@ services:
     restart: always
     build:
       context: ./client
-    environment:
-      - VITE_TITLE=${TITLE}
-      - VITE_DATA_SERVER_URL=${DATA_SERVER_URL}
+      args:
+        VITE_TITLE: ${TITLE}
+        VITE_DATA_SERVER_URL: ${DATA_SERVER_URL}
+        VITE_BACKEND_URL: http://backend:4001
     ports:
-      - "${PORT}:5173"
+      - "${PORT}:3000"
     networks:
       - sharednet
 
