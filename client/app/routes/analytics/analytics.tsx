@@ -31,6 +31,10 @@ export async function loader() {
     return { date: x.date, value: x.bookingReviewsCount };
   });
 
+  const bookingCityRanking = analytics.map((x) => {
+    return { date: x.date, value: x.bookingCityRanking };
+  });
+
   const googleRatingsCount = analytics.map((x) => {
     return { date: x.date, value: x.googleReviewsCount };
   });
@@ -44,6 +48,7 @@ export async function loader() {
     bookingRatingsCount,
     googleRating,
     googleRatingsCount,
+    bookingCityRanking,
   };
 }
 
@@ -61,12 +66,18 @@ export default function Analytics({ loaderData }: Route.ComponentProps) {
           <Button className="cursor-pointer">Add New</Button>
         </Link>
       </div>
-      <div className="mt-16 grid grid-cols-1 gap-y-16">
+      <div className="mt-16 grid grid-cols-1 gap-x-4 lg:grid-cols-2 gap-y-16">
         <LinearChart
           title="Booking.Com Rating"
           domain={[0, 10]}
           description=""
           data={loaderData.bookingRating}
+        />
+        <LinearChart
+          title="Booking.Com Ranking within the city"
+          domain={[500, 1]}
+          description=""
+          data={loaderData.bookingCityRanking}
         />
         <LinearChart
           title="Booking.com reviews #"
@@ -103,6 +114,7 @@ export interface AnalyticsData {
   id: string;
   date: string; // e.g. "2025-11"
   bookingReviewsScore: number;
+  bookingCityRanking: number;
   bookingReviewsCount: number;
   googleReviewsScore: number;
   googleReviewsCount: number;

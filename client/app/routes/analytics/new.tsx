@@ -11,6 +11,12 @@ import { AnalyticsAddEdit } from "~/components/analytics/form";
 
 const analyticsSchema = z.object({
   date: z.coerce.date(), // YYYY-MM-DD
+  bookingCityRanking: z
+    .string()
+    .transform(Number)
+    .refine((val) => !isNaN(val) && val >= 0, {
+      message: "Must be a non-negative number",
+    }),
   bookingReviewsCount: z
     .string()
     .transform(Number)
