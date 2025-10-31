@@ -1,0 +1,26 @@
+services:
+  backend:
+    build:
+      context: ./server
+    environment:
+      - DB_FILE=${}
+    volumes:
+      - ${DB_FILE}:/app/db.json
+    networks:
+      - sharednet
+
+  frontend:
+    restart: always
+    build:
+      context: ./client
+    environment:
+      - VITE_TITLE=${TITLE}
+      - VITE_DATA_SERVER_URL=${DATA_SERVER_URL}
+    ports:
+      - "${PORT}:5173"
+    networks:
+      - sharednet
+
+networks:
+  sharednet:
+    name: my-shared-network
