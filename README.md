@@ -1,4 +1,7 @@
-This is an incremental, lightweight PMS for small hotels.
+This is an incremental, lightweight PMS for (small) hotels. Database is a `JSON` file, therefore the assumption
+is that there won't be many users of this app. Database backup and versioning is supposed to be done using `git` and `Github`.
+Check the [gw](https://github.com/sumanchapai/gw) project for a webserver that provides `git commit` and `git push` features
+from the browser.
 
 ![Analytics charts on homepage](images/image1.jpeg)
 
@@ -8,7 +11,7 @@ This is an incremental, lightweight PMS for small hotels.
 
 **Architecture:**
 
-Backend is a `json-server` client that uses a `.json` file as a database.
+Backend is a [json-server](https://github.com/typicode/json-server) instance that uses a `.json` file as a database.
 
 **Usage:**
 
