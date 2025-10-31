@@ -29,6 +29,18 @@ const analyticsSchema = z.object({
     .refine((val) => !isNaN(val) && val >= 0 && val <= 10, {
       message: "Must be between 0 and 10",
     }),
+  tripAdvisorReviewsCount: z
+    .string()
+    .transform(Number)
+    .refine((val) => !isNaN(val) && val >= 0, {
+      message: "Must be a non-negative number",
+    }),
+  tripAdvisorReviewsScores: z
+    .string()
+    .transform(Number)
+    .refine((val) => !isNaN(val) && val >= 0 && val <= 5, {
+      message: "Must be between 0 and 5",
+    }),
   googleReviewsCount: z
     .string()
     .transform(Number)
@@ -41,7 +53,21 @@ const analyticsSchema = z.object({
     .refine((val) => !isNaN(val) && val >= 0 && val <= 5, {
       message: "Must be between 0 and 5",
     }),
+  airbnbReviewsCount: z
+    .string()
+    .transform(Number)
+    .refine((val) => !isNaN(val) && val >= 0, {
+      message: "Must be a non-negative number",
+    }),
+  airbnbReviewsScores: z
+    .string()
+    .transform(Number)
+    .refine((val) => !isNaN(val) && val >= 0 && val <= 5, {
+      message: "Must be between 0 and 5",
+    }),
 });
+
+export type AnalyticsDataBaics = z.infer<typeof analyticsSchema>;
 
 interface PostPutActionArgs extends Route.ActionArgs {
   isPost: boolean;
@@ -53,7 +79,6 @@ export async function AnalyticsPostPUTAction({
   isPost,
 }: PostPutActionArgs) {
   try {
-    console.log("1");
     // 1️⃣ Parse form data
     const formData = await request.formData();
     const data = Object.fromEntries(formData.entries());
@@ -68,15 +93,11 @@ export async function AnalyticsPostPUTAction({
       });
     }
 
-    console.log("2");
     // 3️⃣ Prepare body
     const body = {
       createdAt: new Date().toISOString(),
       date: data.date,
-      bookingReviewsScore: data.bookingReviewsScores,
-      bookingReviewsCount: data.bookingReviewsCount,
-      googleReviewsScore: data.googleReviewsScores,
-      googleReviewsCount: data.googleReviewsCount,
+      ...data,
     };
 
     // 4️⃣ Choose request options
@@ -87,13 +108,11 @@ export async function AnalyticsPostPUTAction({
           body: JSON.stringify(body),
         };
 
-    console.log("3");
     // 5️⃣ Make the request
     const res = await fetch(
       isPost ? APIS.ANALYTICS : `${APIS.ANALYTICS}/${params.id}`,
       fetchOptions,
     );
-    console.log("4");
 
     // 6️⃣ Handle HTTP errors
     if (!res.ok) {

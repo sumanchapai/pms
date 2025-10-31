@@ -58,7 +58,7 @@ export default function List({ loaderData }: Route.ComponentProps) {
               <TableHeader>
                 <TableRow>
                   <TableHead>Date</TableHead>
-                  <TableHead>Created</TableHead>
+                  <TableHead>Created At</TableHead>
                   <TableHead>Delete</TableHead>
                 </TableRow>
               </TableHeader>

@@ -17,6 +17,7 @@ import { APIS } from "~/lib/apis";
 import type { Route } from "./+types/analytics";
 import { Button } from "~/components/ui/button";
 import { Link, Outlet } from "react-router";
+import type { AnalyticsDataBaics } from "./new";
 
 export async function loader() {
   const analytics = (await fetch(APIS.ANALYTICS).then((x) =>
@@ -24,7 +25,7 @@ export async function loader() {
   )) as AnalyticsDataArray;
 
   const bookingRating = analytics.map((x) => {
-    return { date: x.date, value: x.bookingReviewsScore };
+    return { date: x.date, value: x.bookingReviewsScores };
   });
 
   const bookingRatingsCount = analytics.map((x) => {
@@ -40,15 +41,35 @@ export async function loader() {
   });
 
   const googleRating = analytics.map((x) => {
-    return { date: x.date, value: x.googleReviewsScore };
+    return { date: x.date, value: x.googleReviewsScores };
+  });
+
+  const airbnbRatingsCount = analytics.map((x) => {
+    return { date: x.date, value: x.airbnbReviewsCount };
+  });
+
+  const airbnbRating = analytics.map((x) => {
+    return { date: x.date, value: x.airbnbReviewsScores };
+  });
+
+  const tripAdvisorRatingsCount = analytics.map((x) => {
+    return { date: x.date, value: x.tripAdvisorReviewsCount };
+  });
+
+  const tripAdvisorRating = analytics.map((x) => {
+    return { date: x.date, value: x.tripAdvisorReviewsScores };
   });
 
   return {
     bookingRating,
     bookingRatingsCount,
+    bookingCityRanking,
     googleRating,
     googleRatingsCount,
-    bookingCityRanking,
+    airbnbRating,
+    airbnbRatingsCount,
+    tripAdvisorRating,
+    tripAdvisorRatingsCount,
   };
 }
 
@@ -75,7 +96,7 @@ export default function Analytics({ loaderData }: Route.ComponentProps) {
         />
         <LinearChart
           title="Booking.Com Ranking within the city"
-          domain={[500, 1]}
+          yAxisReversed={true}
           description=""
           data={loaderData.bookingCityRanking}
         />
@@ -97,6 +118,30 @@ export default function Analytics({ loaderData }: Route.ComponentProps) {
           data={loaderData.googleRatingsCount}
           color="blue"
         />
+        <LinearChart
+          title="TripAdvisor Rating"
+          description=""
+          domain={[0, 5]}
+          data={loaderData.tripAdvisorRating}
+        />
+        <LinearChart
+          title="TripAdvisor reviews #"
+          description=""
+          data={loaderData.tripAdvisorRatingsCount}
+          color="blue"
+        />
+        <LinearChart
+          title="Airbnb Rating"
+          description=""
+          domain={[0, 5]}
+          data={loaderData.airbnbRating}
+        />
+        <LinearChart
+          title="Airbnb reviews #"
+          description=""
+          data={loaderData.airbnbRatingsCount}
+          color="blue"
+        />
       </div>
       <Outlet />
     </div>
@@ -110,16 +155,11 @@ export type ChartData = Array<{
 
 export type AnalyticsDataArray = Array<AnalyticsData>;
 
-export interface AnalyticsData {
+export type AnalyticsData = Omit<AnalyticsDataBaics, "date"> & {
   id: string;
-  date: string; // e.g. "2025-11"
-  bookingReviewsScore: number;
-  bookingCityRanking: number;
-  bookingReviewsCount: number;
-  googleReviewsScore: number;
-  googleReviewsCount: number;
+  date: string;
   createdAt: string; // eg. timestamp
-}
+};
 
 function formatDate(dateStr: string) {
   const date = new Date(dateStr);
@@ -132,12 +172,14 @@ function LinearChart({
   description,
   domain,
   color,
+  yAxisReversed,
 }: {
   title: string;
   data: ChartData;
   description: string;
   domain?: Array<number>;
   color?: string;
+  yAxisReversed?: boolean;
 }) {
   const sortedData = useMemo(() => {
     return [...data].sort(
@@ -169,7 +211,12 @@ function LinearChart({
               }}
             >
               <CartesianGrid vertical={false} />
-              <YAxis dataKey={"value"} axisLine={false} domain={domain} />
+              <YAxis
+                dataKey={"value"}
+                axisLine={false}
+                domain={domain}
+                reversed={yAxisReversed}
+              />
               <XAxis
                 dataKey="date"
                 tickLine={false}

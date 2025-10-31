@@ -26,8 +26,13 @@ interface AnalyticsAddEditProps {
   action: string;
   method: HTMLFormMethod;
   initialDate?: string;
+  initialBookingCityRanking?: number;
   initialBookingReviewsCount?: number;
   initialBookingReviewsScore?: number;
+  initialTripadvisorReviewsCount?: number;
+  initialTripadvisorReviewsScore?: number;
+  initialAirbnbReviewsCount?: number;
+  initialAirbnbReviewsScore?: number;
   initialGoogleReviewsCount?: number;
   initialGoogleReviewsScore?: number;
 }
@@ -55,7 +60,7 @@ export function AnalyticsAddEdit({
     >
       <DialogOverlay className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
       <DialogContent
-        className="sm:max-w-lg bg-white"
+        className="sm:max-w-lg bg-white max-h-[80%] overflow-auto"
         onInteractOutside={(e) => e.preventDefault()} // 🔒 Prevent closing by clicking outside
         onEscapeKeyDown={(e) => e.preventDefault()} // 🔒 Prevent closing by ESC
       >
@@ -81,6 +86,43 @@ export function AnalyticsAddEdit({
             <FieldError>{fieldErrors?.date?.errors?.[0]}</FieldError>
           </Field>
           <Field>
+            <FieldLabel htmlFor="bookingReviewsScores">
+              Booking.com Review Score
+            </FieldLabel>
+            <Input
+              type="number"
+              step={0.1}
+              required
+              onChange={handleChange}
+              defaultValue={props.initialBookingReviewsScore}
+              id="bookingReviewsScores"
+              name="bookingReviewsScores"
+              min={0}
+              max={10}
+            />
+            <FieldError>
+              {fieldErrors?.bookingReviewsScores?.errors?.[0]}
+            </FieldError>
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="bookingReviewsCount">
+              Booking.com City Ranking
+            </FieldLabel>
+            <Input
+              defaultValue={props.initialBookingCityRanking}
+              type="number"
+              required
+              onChange={handleChange}
+              id="bookingCityRanking"
+              name="bookingCityRanking"
+              step={1}
+              min={1}
+            />
+            <FieldError>
+              {fieldErrors?.bookingReviewsCount?.errors?.[0]}
+            </FieldError>
+          </Field>
+          <Field>
             <FieldLabel htmlFor="bookingReviewsCount">
               Number of Booking.com Reviews
             </FieldLabel>
@@ -101,24 +143,22 @@ export function AnalyticsAddEdit({
             </FieldError>
           </Field>
           <Field>
-            <FieldLabel htmlFor="bookingReviewsScores">
-              Booking.com Review Score
+            <FieldLabel htmlFor="googleReviewsScores">
+              Google.com Review Score
             </FieldLabel>
             <Input
               type="number"
               step={0.1}
               required
+              defaultValue={props.initialGoogleReviewsScore}
+              id="googleReviewsScores"
+              name="googleReviewsScores"
               onChange={handleChange}
-              defaultValue={props.initialBookingReviewsScore}
-              id="bookingReviewsScores"
-              name="bookingReviewsScores"
               min={0}
-              max={10}
+              max={5}
             />
-            {/* Input, Select, Switch, etc. */}
-            <FieldDescription></FieldDescription>
             <FieldError>
-              {fieldErrors?.bookingReviewsScores?.errors?.[0]}
+              {fieldErrors?.googleReviewsScores?.errors?.[0] ?? ""}
             </FieldError>
           </Field>
           <Field>
@@ -135,33 +175,85 @@ export function AnalyticsAddEdit({
               step={1}
               min={0}
             />
-            {/* Input, Select, Switch, etc. */}
-            <FieldDescription></FieldDescription>
             <FieldError className="">
               {fieldErrors?.googleReviewsCount?.errors?.[0] ?? " "}
             </FieldError>
           </Field>
           <Field>
-            <FieldLabel htmlFor="googleReviewsScores">
-              Google.com Review Score
+            <FieldLabel htmlFor="tripAdvisorReviewsScores">
+              TripAdvisor Review Score
             </FieldLabel>
             <Input
               type="number"
               step={0.1}
               required
-              defaultValue={props.initialGoogleReviewsScore}
-              id="googleReviewsScores"
-              name="googleReviewsScores"
+              defaultValue={props.initialTripadvisorReviewsScore}
+              id="tripAdvisorReviewsScores"
+              name="tripAdvisorReviewsScores"
               onChange={handleChange}
               min={0}
               max={5}
             />
-            {/* Input, Select, Switch, etc. */}
-            <FieldDescription></FieldDescription>
             <FieldError>
-              {fieldErrors?.googleReviewsScores?.errors?.[0] ?? ""}
+              {fieldErrors?.tripAdvisorReviewsScores?.errors?.[0] ?? ""}
             </FieldError>
           </Field>
+          <Field>
+            <FieldLabel htmlFor="tripAdvisorReviewsCount">
+              Number of TripAdvisor Reviews
+            </FieldLabel>
+            <Input
+              type="number"
+              required
+              defaultValue={props.initialTripadvisorReviewsCount}
+              onChange={handleChange}
+              id="tripAdvisorReviewsCount"
+              name="tripAdvisorReviewsCount"
+              step={1}
+              min={0}
+            />
+            <FieldError className="">
+              {fieldErrors?.tripAdvisorReviewsCount?.errors?.[0] ?? " "}
+            </FieldError>
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="airbnbReviewsScores">
+              Airbnb Review Score
+            </FieldLabel>
+            <Input
+              type="number"
+              step={0.1}
+              required
+              defaultValue={props.initialAirbnbReviewsScore}
+              id="airbnbReviewsScores"
+              name="airbnbReviewsScores"
+              onChange={handleChange}
+              min={0}
+              max={5}
+            />
+            <FieldError>
+              {fieldErrors?.airbnbReviewsScores?.errors?.[0] ?? ""}
+            </FieldError>
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="airbnbReviewsCount">
+              Number of Airbnb Reviews
+            </FieldLabel>
+            <Input
+              type="number"
+              required
+              defaultValue={props.initialAirbnbReviewsCount}
+              onChange={handleChange}
+              id="airbnbReviewsCount"
+              name="airbnbReviewsCount"
+              step={1}
+              min={0}
+            />
+            <FieldError className="">
+              {fieldErrors?.airbnbReviewsCount?.errors?.[0] ?? " "}
+            </FieldError>
+          </Field>
+
           <div className="flex mt-4 justify-between gap-x-4">
             <Button className="cursor-pointer" type="submit">
               Submit

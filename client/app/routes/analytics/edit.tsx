@@ -25,10 +25,15 @@ export default function AnalyticsEdit({ loaderData }: Route.ComponentProps) {
       method="post"
       action={"."}
       initialDate={loaderData.data.date}
-      initialGoogleReviewsCount={loaderData.data.googleReviewsCount}
-      initialGoogleReviewsScore={loaderData.data.googleReviewsScore}
+      initialBookingReviewsScore={loaderData.data.bookingReviewsScores}
+      initialBookingCityRanking={loaderData.data.bookingCityRanking}
       initialBookingReviewsCount={loaderData.data.bookingReviewsCount}
-      initialBookingReviewsScore={loaderData.data.bookingReviewsScore}
+      initialGoogleReviewsCount={loaderData.data.googleReviewsCount}
+      initialGoogleReviewsScore={loaderData.data.googleReviewsScores}
+      initialAirbnbReviewsScore={loaderData.data.airbnbReviewsScores}
+      initialTripadvisorReviewsCount={loaderData.data.tripAdvisorReviewsCount}
+      initialAirbnbReviewsCount={loaderData.data.airbnbReviewsCount}
+      initialTripadvisorReviewsScore={loaderData.data.tripAdvisorReviewsScores}
     />
   );
 }
