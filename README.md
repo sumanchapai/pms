@@ -1,5 +1,7 @@
 This is an incremental, lightweight PMS for small hotels.
 
+![Analytics charts on homepage](images/image1.jpeg)
+
 **Features TODO:**
 
 - [x] Note monthly analytics.
