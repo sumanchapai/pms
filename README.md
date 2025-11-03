@@ -2,7 +2,7 @@ This is an incremental, lightweight PMS for (small) hotels. Database is a `JSON`
 is that there won't be many users of this app. Database backup and versioning is supposed to be done using `git` and `Github`.
 Check the [gw](https://github.com/sumanchapai/gw) project for a webserver that provides `git commit` and `git push` features
 from the browser. This app is supposed to be self-hosted, and the code modified as per your need. You should be able to host
-using the instructions below. Note that you'll have to have Docker installed on your system.
+using the instructions below (requires Docker installed).
 
 ![Analytics charts on homepage](images/image1.jpeg)
 
