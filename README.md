@@ -20,5 +20,5 @@ Backend is a [json-server](https://github.com/typicode/json-server) instance tha
 1. Run `cp .env.example .env` and set the environment variables.
    1. Create `db.json` in some folder (Use the provided `db.json` as template).
    1. Provide that folder's abolute path in `DB_REPO` environment file.
-   1. If you already have json file, make sure the format is the same as in the example file.
+   1. If you already have json file, make sure the format is the same as in the [example file](./db.json).
 1. Run `docker compose up`. Add `-d` flag at the end if you want to run in detached mode.
